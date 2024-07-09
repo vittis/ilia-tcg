@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import debounce from "lodash.debounce";
+import { AlertCircle } from "lucide-react";
 
 export const typeColorMap = {
 	Colorless: "text-zinc-300",
@@ -32,12 +33,14 @@ const fetchCards = async (searchQuery: string) => {
 const CardsList = () => {
 	const [searchQuery, setSearchQuery] = useState("");
 
-	const { data, isLoading } = useQuery<{ data: Card[] }>({
+	const { data, isLoading, error } = useQuery<{ data: Card[] }>({
 		queryKey: ["cards", "all", searchQuery],
 		queryFn: () => fetchCards(searchQuery),
 	});
 
 	const debouncedSetQuery = debounce(setSearchQuery, 300);
+
+	const isEmptyResult = data?.data?.length === 0;
 
 	return (
 		<>
@@ -46,6 +49,15 @@ const CardsList = () => {
 				className="mt-10"
 				placeholder="Search card by name"
 			/>
+
+			{isEmptyResult && <div className="text-glow mt-8 text-3xl">No results were found...</div>}
+
+			{error && (
+				<div className="text-glow mt-8 flex gap-2 text-3xl">
+					<AlertCircle className="text-red-500" size={40} /> Something went wrong with your
+					search...
+				</div>
+			)}
 
 			<div className="grid grid-cols-[repeat(auto-fit,minmax(330px,1fr))] gap-8 py-10">
 				{isLoading &&
