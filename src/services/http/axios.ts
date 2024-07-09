@@ -1,20 +1,12 @@
 import axios from "axios";
 
 export const api = axios.create({
-	// baseURL: "http://localhost:8080",
 	baseURL: import.meta.env.VITE_API_URL,
 });
 
 api.interceptors.request.use(
 	config => {
-		const token = localStorage.getItem("sb-auth");
-
-		const parsedToken = JSON.parse(token || "{}");
-
-		if (parsedToken?.access_token) {
-			config.headers["X-Api-Key"] = import.meta.env.VITE_API_KEY;
-		}
-
+		config.headers["X-Api-Key"] = import.meta.env.VITE_API_KEY;
 		return config;
 	},
 	error => {
