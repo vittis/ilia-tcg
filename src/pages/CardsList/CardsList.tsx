@@ -1,12 +1,14 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/services/http/axios";
-import { Nav } from "@/components/shared/Nav/Nav";
-import { ModeToggle } from "@/components/mode-toggle";
-import { Card } from "./services/http/types";
-import { cn } from "./lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Card } from "@/services/http/types";
+import { cn } from "@/lib/utils";
+import { Link } from "react-router-dom";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import debounce from "lodash.debounce";
 
-const typeColorMap = {
+export const typeColorMap = {
 	Colorless: "text-zinc-300",
 	Darkness: "text-zinc-400",
 	Dragon: "text-teal-400",
@@ -20,30 +22,44 @@ const typeColorMap = {
 	Water: "text-blue-400",
 } as { [key: string]: string };
 
-const fetchCards = async () => {
-	const { data } = await api.get("/cards");
+const fetchCards = async (searchQuery: string) => {
+	const opts = searchQuery ? { params: { q: `name:${searchQuery}*` } } : undefined;
+
+	const { data } = await api.get("/cards", opts);
 	return data;
 };
 
-function App() {
-	const { data, isLoading } = useQuery({ queryKey: ["cards"], queryFn: fetchCards });
+const CardsList = () => {
+	const [searchQuery, setSearchQuery] = useState("");
 
-	console.log(data);
+	const { data, isLoading } = useQuery<{ data: Card[] }>({
+		queryKey: ["cards", "all", searchQuery],
+		queryFn: () => fetchCards(searchQuery),
+	});
+
+	const debouncedSetQuery = debounce(setSearchQuery, 300);
 
 	return (
-		<main className="container mx-auto pt-6">
-			<div className="absolute right-4 top-4">
-				<ModeToggle />
-			</div>
-			<Nav />
+		<>
+			<Input
+				onChange={e => debouncedSetQuery(e.target.value)}
+				className="mt-10"
+				placeholder="Search card by name"
+			/>
 
 			<div className="grid grid-cols-[repeat(auto-fit,minmax(330px,1fr))] gap-8 py-10">
 				{isLoading &&
-					Array.from(Array(21)).map(_ => <Skeleton key={_} className="h-[200px] w-[410px]" />)}
+					Array.from(Array(21)).map((_, index) => (
+						<Skeleton key={index} className="h-[200px] w-[410px]" />
+					))}
 
 				{data?.data &&
-					data.data.map((card: Card) => (
-						<div key={card.id} className="bg-pattern relative flex rounded-xl border">
+					data.data.map(card => (
+						<Link
+							key={card.id}
+							to={`/cards/${card.id}`}
+							className="bg-pattern relative flex rounded-xl border transition-all hover:scale-105 hover:border-yellow-400"
+						>
 							<img className="h-[200px]" src={card.images.small} alt={card.name} />
 
 							<div className="py-2 pl-2 pr-6">
@@ -65,13 +81,11 @@ function App() {
 									<div className="mt-1 font-mono text-xs text-zinc-500">{card.id}</div>
 								</div>
 							</div>
-						</div>
+						</Link>
 					))}
 			</div>
-
-			{/* <Outlet /> */}
-		</main>
+		</>
 	);
-}
+};
 
-export default App;
+export { CardsList };
