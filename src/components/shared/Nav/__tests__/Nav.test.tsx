@@ -13,13 +13,13 @@ describe("Nav", () => {
 		expect(container).toMatchSnapshot();
 	});
 
-	it("should render subtitle", () => {
+	it("should render nav header title", () => {
 		render(
 			<BrowserRouter>
 				<Nav />
 			</BrowserRouter>,
 		);
 
-		expect(screen.getByText("⚡ Search your favorite cards ⚡")).toBeDefined();
+		expect(screen.getByText("Pokemon TCG")).toBeDefined();
 	});
 });

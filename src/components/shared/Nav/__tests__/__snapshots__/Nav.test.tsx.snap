@@ -14,7 +14,7 @@ exports[`Nav > matches snapshot 1`] = `
     <div
       class="text-glow mt-2 text-sm font-bold text-zinc-100"
     >
-      ⚡ Search your favorite cards ⚡
+      nav.subtitle
     </div>
   </div>
 </div>
