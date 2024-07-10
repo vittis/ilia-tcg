@@ -7,7 +7,7 @@ import { queryClient } from "./services/http/queryClient.tsx";
 import { ToastContainer } from "react-toastify";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes.tsx";
-import { ThemeProvider } from "./services/state/ThemeProvider.tsx";
+import { ThemeProvider } from "./services/context/ThemeProvider.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>

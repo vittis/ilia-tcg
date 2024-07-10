@@ -28,7 +28,7 @@ interface IAbility {
 	type: string;
 }
 
-interface IAttack {
+export interface IAttack {
 	cost: string[];
 	name: string;
 	text: string;
