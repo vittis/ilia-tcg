@@ -10,24 +10,7 @@
 		@apply bg-background text-foreground;
 	}
 
-	.bg-pattern {
-		background-image: repeating-linear-gradient(
-			45deg,
-			var(--b1),
-			var(--b1) 13px,
-			var(--b2) 13px,
-			var(--b2) 14px
-		);
-	}
-
-	.text-glow {
-		text-shadow: rgba(187, 14, 152, 0.875) 0px 0px 10px;
-	}
-
 	:root {
-		--b1: #fff;
-		--b2: #f2f2f2;
-
 		--background: 0 0% 100%;
 		--foreground: 222.2 84% 4.9%;
 
@@ -60,9 +43,6 @@
 	}
 
 	.dark {
-		--b1: #09090b;
-		--b2: #212115b2;
-
 		--background: 240 20% 1%;
 		--foreground: 0 0% 98%;
 		--card: 240 10% 3.9%;
@@ -82,5 +62,19 @@
 		--border: 240 3.7% 15.9%;
 		--input: 240 3.7% 15.9%;
 		--ring: 240 4.9% 43.9%;
+	}
+
+	.bg-pattern {
+		background-image: repeating-linear-gradient(
+			45deg,
+			#09090b,
+			#09090b 13px,
+			#212115b2 13px,
+			#212115b2 14px
+		);
+	}
+
+	.text-glow {
+		text-shadow: rgba(187, 14, 152, 0.875) 0px 0px 10px;
 	}
 }

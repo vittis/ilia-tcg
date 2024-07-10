@@ -5,9 +5,9 @@ import "./styles/main.scss";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "./services/http/queryClient.tsx";
 import { ToastContainer } from "react-toastify";
-import { ThemeProvider } from "@/components/theme-provider";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes.tsx";
+import { ThemeProvider } from "./services/state/ThemeProvider.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>

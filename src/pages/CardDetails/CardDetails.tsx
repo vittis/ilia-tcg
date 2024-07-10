@@ -100,7 +100,7 @@ const CardDetails = () => {
 						<div className="mt-3 flex items-center gap-2">
 							<div className="text-xl">Attacks:</div>
 							{card.attacks.map(attack => (
-								<Dialog>
+								<Dialog key={attack.name}>
 									<DialogTrigger asChild>
 										<Button key={attack.name} size="sm" variant="outline">
 											{attack.name}
@@ -115,15 +115,17 @@ const CardDetails = () => {
 										<div className="flex items-baseline gap-2">
 											Cost:{" "}
 											{attack.cost.map(cost => (
-												<span className={cn("font-mono text-sm", typeColorMap?.[cost])}>
+												<span key={cost} className={cn("font-mono text-sm", typeColorMap?.[cost])}>
 													{cost}
 												</span>
 											))}
 										</div>
 
-										<div className="flex items-baseline gap-2">
-											Damage: <span className="text-2xl text-red-500">{attack.damage}</span>
-										</div>
+										{attack.damage && (
+											<div className="flex items-baseline gap-2">
+												Damage: <span className="text-2xl text-red-500">{attack.damage}</span>
+											</div>
+										)}
 									</DialogContent>
 								</Dialog>
 							))}

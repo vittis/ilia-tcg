@@ -3,11 +3,12 @@ import { api } from "@/services/http/axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/services/http/types";
 import { cn } from "@/lib/utils";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import debounce from "lodash.debounce";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Frown } from "lucide-react";
+import { NavigablePagination } from "@/components/shared/NavigablePagination/NavigablePagination";
 
 export const typeColorMap = {
 	Colorless: "text-zinc-300",
@@ -23,46 +24,71 @@ export const typeColorMap = {
 	Water: "text-blue-400",
 } as { [key: string]: string };
 
-const fetchCards = async (searchQuery: string) => {
-	const opts = searchQuery ? { params: { q: `name:${searchQuery}*` } } : undefined;
+interface CardSearchQuery {
+	data: Card[];
+	page: number;
+	pageSize: number;
+	totalCount: number;
+	count: number;
+}
 
-	const { data } = await api.get("/cards", opts);
+const fetchCards = async (searchQuery: string, page: string) => {
+	const nameParams = searchQuery ? { q: `name:${searchQuery}*` } : {};
+
+	const { data } = await api.get("/cards", {
+		params: {
+			page,
+			...nameParams,
+		},
+	});
 	return data;
 };
 
 const CardsList = () => {
+	let [searchParams, setSearchParams] = useSearchParams();
+	const currentPage = searchParams.get("page") || "1";
+
 	const [searchQuery, setSearchQuery] = useState("");
 
-	const { data, isLoading, error } = useQuery<{ data: Card[] }>({
-		queryKey: ["cards", "all", searchQuery],
-		queryFn: () => fetchCards(searchQuery),
+	const { data, isLoading, error } = useQuery<CardSearchQuery>({
+		queryKey: ["cards", "all", searchQuery, currentPage],
+		queryFn: () => fetchCards(searchQuery, currentPage),
 	});
 
-	const debouncedSetQuery = debounce(setSearchQuery, 300);
+	const debouncedSetQuery = debounce(e => {
+		setSearchQuery(e.target.value);
+		setSearchParams({ page: "1" });
+	}, 400);
 
 	const isEmptyResult = data?.data?.length === 0;
 
 	return (
-		<>
-			<Input
-				onChange={e => debouncedSetQuery(e.target.value)}
-				className="mt-10"
-				placeholder="Search card by name"
+		<section className="my-10">
+			<Input onChange={debouncedSetQuery} placeholder="Search card by name" />
+
+			<NavigablePagination
+				currentPage={Number(currentPage)}
+				totalCount={data?.totalCount}
+				pageSize={data?.pageSize}
+				isLoading={isLoading}
 			/>
 
-			{isEmptyResult && <div className="text-glow mt-8 text-3xl">No results were found...</div>}
-
+			{isEmptyResult && (
+				<div className="text-glow mt-8 flex gap-2 text-3xl">
+					<Frown className="text-red-400" size={40} />
+					No results were found...
+				</div>
+			)}
 			{error && (
 				<div className="text-glow mt-8 flex gap-2 text-3xl">
-					<AlertCircle className="text-red-500" size={40} /> Something went wrong with your
+					<AlertCircle className="text-red-400" size={40} /> Something went wrong with your
 					search...
 				</div>
 			)}
-
 			<div className="grid grid-cols-[repeat(auto-fit,minmax(330px,1fr))] gap-8 py-10">
 				{isLoading &&
 					Array.from(Array(21)).map((_, index) => (
-						<Skeleton key={index} className="h-[200px] w-[410px]" />
+						<Skeleton key={index} className="h-[150px] w-[290px] lg:h-[200px] lg:w-[410px]" />
 					))}
 
 				{data?.data &&
@@ -96,7 +122,14 @@ const CardsList = () => {
 						</Link>
 					))}
 			</div>
-		</>
+
+			<NavigablePagination
+				currentPage={Number(currentPage)}
+				totalCount={data?.totalCount}
+				pageSize={data?.pageSize}
+				isLoading={isLoading}
+			/>
+		</section>
 	);
 };
 
