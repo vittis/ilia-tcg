@@ -19,18 +19,6 @@ api.interceptors.response.use(
 		return response;
 	},
 	function (error) {
-		/* console.log(error);
-    if (error.message === "Request failed with status code 401") {
-      return Promise.reject(error);
-    }
-
-    toast.error(
-      error?.response?.data?.message ||
-        error?.response?.data?.error ||
-        error?.message ||
-        "Something went wrong"
-    ); */
-
 		return Promise.reject(error);
 	},
 );
