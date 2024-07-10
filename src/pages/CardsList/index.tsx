@@ -22,6 +22,12 @@ const CardsList = () => {
 			<SearchInput />
 
 			{!error && !hasResult && (
+				<div className="ml-1 mt-4 text-zinc-200">
+					Found <span className="font-mono text-yellow-400">{data?.totalCount}</span> cards
+				</div>
+			)}
+
+			{!error && !hasResult && (
 				<div className="hidden md:block">
 					<NavigablePagination
 						currentPage={Number(currentPage)}

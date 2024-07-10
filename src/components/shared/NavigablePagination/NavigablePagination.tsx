@@ -98,7 +98,7 @@ const NavigablePagination = ({
 	}, [currentPage, isLoading, totalPages, setSearchParams]);
 
 	return (
-		<Pagination className="mt-10">
+		<Pagination className="mt-2">
 			<PaginationContent>
 				<PaginationItem>
 					<PaginationPrevious
