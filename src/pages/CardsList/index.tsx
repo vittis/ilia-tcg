@@ -21,9 +21,10 @@ const CardsList = () => {
 		<section className="my-10">
 			<SearchInput />
 
-			{!error && !hasResult && data?.totalCount && (
+			{!error && (
 				<div className="ml-1 mt-4 text-zinc-200">
-					Found <span className="font-mono text-yellow-400">{data?.totalCount}</span> cards
+					Found <span className="font-mono text-yellow-400">{data?.totalCount || 0}</span> cards.
+					Showing <span className="font-mono text-yellow-400">{data?.count || 0}</span>.
 				</div>
 			)}
 

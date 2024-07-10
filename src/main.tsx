@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes.tsx";
 import { ThemeProvider } from "./services/context/ThemeProvider.tsx";
+import "@/services/i18n/index.ts";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
 	<React.StrictMode>
