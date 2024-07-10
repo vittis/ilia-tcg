@@ -6,6 +6,8 @@ import { CardsListLoadingState } from "./components/CardsListLoadingState";
 import { ListCard } from "./components/ListCard";
 import { useSearchCards } from "@/services/hooks/useSearchCards";
 import { SearchInput } from "./components/SearchInput";
+import { CardsCarousel } from "./components/CardsCarousel";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const CardsList = () => {
 	const [searchParams] = useSearchParams();
@@ -20,30 +22,39 @@ const CardsList = () => {
 			<SearchInput />
 
 			{!error && !hasResult && (
-				<NavigablePagination
-					currentPage={Number(currentPage)}
-					totalCount={data?.totalCount}
-					pageSize={data?.pageSize}
-					isLoading={isLoading}
-				/>
+				<div className="hidden md:block">
+					<NavigablePagination
+						currentPage={Number(currentPage)}
+						totalCount={data?.totalCount}
+						pageSize={data?.pageSize}
+						isLoading={isLoading}
+					/>
+				</div>
 			)}
 
 			{hasResult && <CardsListEmptyState />}
 			{error && <CardsListErrorState />}
 
-			<div className="grid grid-cols-[repeat(auto-fit,minmax(330px,1fr))] gap-8 py-10">
+			<div className="hidden grid-cols-[repeat(auto-fit,minmax(330px,1fr))] gap-8 py-10 md:grid">
 				{isLoading && <CardsListLoadingState />}
 
 				{data?.data && data.data.map(card => <ListCard key={card.id} card={card} />)}
 			</div>
 
+			<div className="mt-10 block md:hidden">
+				{isLoading && <Skeleton className="h-[200px] w-full" />}
+				{data?.data && <CardsCarousel cards={data?.data} />}
+			</div>
+
 			{!error && !hasResult && (
-				<NavigablePagination
-					currentPage={Number(currentPage)}
-					totalCount={data?.totalCount}
-					pageSize={data?.pageSize}
-					isLoading={isLoading}
-				/>
+				<div className="hidden md:block">
+					<NavigablePagination
+						currentPage={Number(currentPage)}
+						totalCount={data?.totalCount}
+						pageSize={data?.pageSize}
+						isLoading={isLoading}
+					/>
+				</div>
 			)}
 		</section>
 	);
