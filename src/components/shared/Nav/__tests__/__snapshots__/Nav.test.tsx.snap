@@ -6,7 +6,7 @@ exports[`Nav > matches snapshot 1`] = `
     class="flex flex-col items-center justify-center"
   >
     <a
-      class="text-glow text-5xl font-bold italic text-yellow-400"
+      class="text-glow text-3xl font-bold italic text-yellow-400 md:text-5xl"
       href="/"
     >
       Pokemon TCG
